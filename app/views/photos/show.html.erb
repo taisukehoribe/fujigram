@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-9">
+      <h2>Photo detail</h2>
+      <table class="table">
+        <tr>
+          <td><%= attachment_image_tag @photo, :photo_image, format: 'jpeg', size: "50x50", fallback: "no_image.jpg" %><br>
+            <%= link_to @user.name, user_path(@user)%>
+          </td>
+          <td><%= @photo.title %></td>
+          <td><%= @photo.body %></td>
+          <% if current_user.id == @user.id %>
+            <div>
+            <td><%= link_to "Edit", edit_photo_path(@photo.id), class: "btn btn-success btn-sm" %></td>
+            <td><%= link_to "Destroy", photo_path(@photo.id), method: :delete, "data-confirm" => "本当に削除しますか?", class: "btn btn-danger btn-sm"%></td>
+            </div>
+          <% end %>
+            <td>
+              <% if @photo.favorited_by?(current_user) %>
+                <%= link_to photo_favorites_path(@photo), method: :delete do %>
+                <i class="fa fa-heart" aria-hidden="true" style="color: red;"></i>
+                <%= @photo.favorites.count %> Nice
+                <% end %>
+              <% else %>
+                <%= link_to photo_favorites_path(@photo), method: :post do %>
+                <i class="fa fa-heart" aria-hidden="true" style="color: red;"></i>
+                <%= @photo.favorites.count %> Nice
+                <% end %>
+              <% end %>
+            </td>
+            <td><%= @photo.photo_comments.count %>コメント数</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!-- コメントの表示 -->
+  <% @photo.photo_comments.each do |photo_comment|%>
+  <div>
+    <%= link_to photo_comment.user.name, [photo_comment.user]%>
+  </div>
+  <div>
+    <%= photo_comment.comment %>
+  </div>
+  <!-- コメントしたものがログインユーザーのものであれば削除ボタンを表示して、削除できる -->
+    <% if photo_comment.user == current_user%>
+      <% if @photo_comment.errors.any? %>
+        <% @photo_comment.errors.full_messages.each do |message| %>
+          <div><%= message %></div>
+        <% end %>
+      <% end %>
+  <div>
+    <%= link_to "delete", photo_path(@photo.id), method: :delete, "data-confirm" => "本当に削除しますか?", class: "btn btn-danger btn-sm"%>
+  </div>
+    <% end %>
+  <% end %>
+  <!-- コメントを機能 -->
+  <div class="row">
+    <%= form_for [@photo, @photo_comment] do |f| %>
+    <div class="col-sm-12">
+      <%= f.text_area :comment, rows:'5', class: "form-control",placeholder: "コメントをここに" %>
+    </div>
+      <%= f.submit "Create Comment", class: " btn btn-info btn btn-lg btn-base-1 mt-20 pull-right" %>
+    <% end %>
+  </div>
+</div>

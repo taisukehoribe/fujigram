@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-2">
+      <h4>User profile</h4>
+      <!-- userのプロフィール写真 -->
+      <div class="img">
+        <%= attachment_image_tag @user, :profile_image , format: 'jpeg', size: "100x100", fallback: "no_image.jpg"  %>
+      </div>
+    </div>
+      <br>
+    <div class="col-xs-10">
+      <table class="table">
+        <tr>
+          <th>name</th>
+          <th><%= @user.name %></th>
+        </tr>
+        <tr>
+          <th>introduction</th>
+          <th><%= @user.introduction %></th>
+        </tr>
+      </table>
+      <div class="row">
+        <% if @user.id == current_user.id %>
+          <p>プロフィールの編集</p>
+          <p><%= link_to "", edit_user_path(@user.id), class: "btn btn-default col-xs-2 glyphicon glyphicon-wrench"%></p>
+        <% end %>
+      </div>
+      <br>
+
+      <h4>New Photo</h4>
+        <%= form_for(@photo, url: '/photos') do |f| %>
+        <div class="row">
+          <label>Title</label>
+           <%= f.text_field :title, class: "col-xs-12" %>
+        </div>
+        <div class="row">
+          <label>Opinion</label>
+          <%= f.text_area :body, class: "col-xs-12" %>
+        </div><br>
+        <div class="row">
+          <%= f.attachment_field :photo_image %>
+        </div><br>
+        <div class="row">
+          <%= f.submit 'Create Photo of Mt.fuji', class: "btn btn-primary col-xs-3" %>
+        </div>
+        <% end %>
+      </div>
+
+      <div class="row">
+        <div class="text-center"><h2>Posted photo</h2></div>
+          <div class="col-xs-12">
+            <div class="flex">
+              <% @user.photos.each do |photo| %>
+              <div>
+                <%= link_to photo_path(photo) do %>
+                <%= attachment_image_tag photo, :photo_image , format: 'jpeg', size: "290x300", fallback: "no_image.jpg"  %>
+                <% end %>
+              </div>
+              <% end %>
+            </div>
+          </div>
+      </div>
+
+  </div>
+</div>
+
+
+
+
