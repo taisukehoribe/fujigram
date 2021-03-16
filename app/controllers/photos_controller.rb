@@ -13,7 +13,6 @@ class PhotosController < ApplicationController
     @photo = Photo.new(photo_params)
     @photo.user_id = current_user.id
     if @photo.save
-      flash[:success] = "You have creatad photo successfully."
       redirect_to photo_path(@photo.id)
     else
       @photos = Photo.all
@@ -37,7 +36,6 @@ class PhotosController < ApplicationController
   def update
     @photo = Photo.find(params[:id])
     if @photo.update(photo_params)
-      flash[:success] = " successfully"
       redirect_to photo_path(@photo)
     else
       render "edit"
@@ -47,7 +45,6 @@ class PhotosController < ApplicationController
   def destroy
     photo = Photo.find(params[:id])
     photo.destroy
-    flash[:success] = "Photo was successfully destroyed."
     redirect_to photos_path
   end
 
